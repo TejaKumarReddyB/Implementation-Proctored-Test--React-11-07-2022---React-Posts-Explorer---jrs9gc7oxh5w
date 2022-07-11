@@ -50,7 +50,7 @@ export const Index = () => {
   const manageData = () => {
     if (allData == null) return;
     let realPage = page * 10;
-    let tmp = allData.filter((e) => e.id >= realPage - 10 && e.id <= realPage);
+    let tmp = allData.filter((e) => e.id > realPage - 10 && e.id <= realPage);
     setData(tmp);
   };
 
