@@ -53,7 +53,7 @@ export const Post = () => {
       <h2 className="post-title">{data.title}</h2>
       <p className="post-body">{data.body}</p>
       <p className="post-author">{authorName}</p>
-      <NavLink to="/">Back to Home</NavLink>
+      <NavLink to="/">Back Home</NavLink>
     </div>
   );
 };
