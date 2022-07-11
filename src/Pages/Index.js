@@ -49,7 +49,8 @@ export const Index = () => {
 
   const manageData = () => {
     if (allData == null) return;
-    let tmp = allData.filter((e, id) => id >= page - 1 && id <= page + 9);
+    let realPage = page * 10;
+    let tmp = allData.filter((e) => e.id >= realPage - 10 && e.id <= realPage);
     setData(tmp);
   };
 
