@@ -15,11 +15,8 @@ import PostPreview from "./PostPreview";
     So show only required number of buttons
 */
 
-const Buttons = ({ pageHandler, active }) => {
-  let tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  let arr = tmp.filter((e) => {
-    return e == 1 || e != active;
-  });
+const Buttons = ({ pageHandler }) => {
+  let arr = [1, 2, 4, 5, 6, 7, 8, 9, 10];
   return arr.map((button) => (
     <button onClick={() => pageHandler(button)} id={`page-${button}`}>
       {button}
@@ -62,7 +59,7 @@ export const Index = () => {
           </li>
         ))}
       </ul>
-      <Buttons pageHandler={pageHandler} active={page} />
+      <Buttons pageHandler={pageHandler} />
     </div>
   );
 };
