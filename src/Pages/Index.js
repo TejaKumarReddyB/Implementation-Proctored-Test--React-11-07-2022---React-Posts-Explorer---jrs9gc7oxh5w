@@ -29,7 +29,7 @@ export const Index = () => {
   const [page, setPage] = useState(1);
   const [data, setData] = useState(null);
 
-  const loadData = () => {
+  const getPosts = () => {
     setIsLoading(true);
     fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`)
       .then((response) => response.json())
@@ -41,7 +41,7 @@ export const Index = () => {
   };
 
   useEffect(() => {
-    loadData();
+    getPosts();
   }, [page]);
 
   const pageHandler = (buttonId) => {
