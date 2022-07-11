@@ -54,8 +54,8 @@ export const Index = () => {
     <div id="index">
       <ul id="postsList">
         {data.map((e, id) => (
-          <li key={e.id} className={id % 2 === 0 ? "even" : "odd"}>
-            <PostPreview element={e} />
+          <li key={e.id}>
+            <PostPreview element={e} classId={id} />
           </li>
         ))}
       </ul>
