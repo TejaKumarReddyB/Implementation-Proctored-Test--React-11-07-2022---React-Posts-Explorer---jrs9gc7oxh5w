@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Loader from "../components/Loader";
 
 /*
     On clicking link in PostPreview component navigate to /post/:id, which shows the Post Page.
@@ -18,10 +20,39 @@ import React from "react";
  */
 
 export const Post = () => {
+  const { id } = useParams();
+  const [data, setData] = useState(null);
+  const [authorName, setAuthor] = useState(null);
+  const [isLoading, setLoading] = useState(true);
 
-    return (
-        <div id="post">
+  const loadData = () => {
+    setLoading(true);
+    fetch("https://jsonplaceholder.typicode.com/posts/" + id)
+      .then((response) => response.json())
+      .then((json) => {
+        setData(json);
+        fetch("https://jsonplaceholder.typicode.com/users/" + json.userId)
+          .then((response) => response.json())
+          .then((author) => {
+            setAuthor(author.name);
+          })
+          .catch((err) => console.log(err));
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  };
 
-        </div>
-    )
-}
+  useEffect(() => {
+    loadData();
+  }, []);
+  return isLoading ? (
+    <Loader />
+  ) : (
+    <div id="post">
+      <h1 className="post-id">Post id:- {data.id}</h1>
+      <h2 className="post-title">{data.title}</h2>
+      <p className="post-body">{data.body}</p>
+      <p className="post-author">{authorName}</p>
+    </div>
+  );
+};

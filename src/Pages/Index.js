@@ -1,6 +1,6 @@
-import React from 'react';
-
-
+import React, { useEffect, useState } from "react";
+import Loader from "../components/Loader";
+import PostPreview from "./PostPreview";
 /*
 2) On Index Page, make an initial request to <code>https://jsonplaceholder.typicode.com/posts</code> to get all the posts. <br/>
     While the request is in progress, display a <code>Loader</code> component. <br/>
@@ -15,11 +15,51 @@ import React from 'react';
     So show only required number of buttons
 */
 
+const Buttons = ({ pageHandler }) => {
+  let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  return arr.map((button) => (
+    <button onClick={() => pageHandler(button)} id={`page-${button}`}>
+      {button}
+    </button>
+  ));
+};
+
 export const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState(null);
 
-    return( 
-        <div id="index">
+  const loadData = () => {
+    setIsLoading(true);
+    fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`)
+      .then((response) => response.json())
+      .then((json) => {
+        setData(json);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+  };
 
-        </div>
-    )
-}
+  useEffect(() => {
+    loadData();
+  }, [page]);
+
+  const pageHandler = (buttonId) => {
+    setPage(buttonId);
+  };
+
+  return isLoading ? (
+    <Loader />
+  ) : (
+    <div id="index">
+      <ul id="postsList">
+        {data.map((e, id) => (
+          <li key={e.id} className={id % 2 === 0 ? "even" : "odd"}>
+            <PostPreview element={e} />
+          </li>
+        ))}
+      </ul>
+      <Buttons pageHandler={pageHandler} />
+    </div>
+  );
+};
