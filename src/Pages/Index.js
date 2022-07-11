@@ -15,8 +15,13 @@ import PostPreview from "./PostPreview";
     So show only required number of buttons
 */
 
-const Buttons = ({ pageHandler }) => {
-  let arr = [1, 2, 4, 5, 6, 7, 8, 9, 10];
+const Buttons = ({ pageHandler, length }) => {
+  let count = length / 10;
+  if (length % 10 > 0) count += 1;
+  let arr = [];
+  for (let i = 1; i <= count; i++) {
+    arr.push(i);
+  }
   return arr.map((button) => (
     <button onClick={() => pageHandler(button)} id={`page-${button}`}>
       {button}
@@ -27,22 +32,30 @@ const Buttons = ({ pageHandler }) => {
 export const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [allData, setAllData] = useState(null);
   const [data, setData] = useState(null);
 
-  const getPosts = () => {
+  useEffect(() => {
     setIsLoading(true);
-    fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`)
+    fetch(`https://jsonplaceholder.typicode.com/posts`)
       .then((response) => response.json())
       .then((json) => {
-        setData(json);
+        setAllData(json);
         setIsLoading(false);
+        manageData();
       })
       .catch((err) => console.log(err));
+  }, []);
+
+  const manageData = () => {
+    if (allData == null) return;
+    let tmp = allData.filter((e, id) => id >= page - 1 && id <= page + 9);
+    setData(tmp);
   };
 
   useEffect(() => {
-    getPosts();
-  }, [page]);
+    manageData();
+  }, [page, allData]);
 
   const pageHandler = (buttonId) => {
     setPage(buttonId);
@@ -59,7 +72,7 @@ export const Index = () => {
           </li>
         ))}
       </ul>
-      <Buttons pageHandler={pageHandler} />
+      <Buttons pageHandler={pageHandler} length={allData.length} />
     </div>
   );
 };
